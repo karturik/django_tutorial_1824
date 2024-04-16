@@ -9,4 +9,7 @@ urlpatterns = [
 
     path('authors/', AuthorListView.as_view(), name='authors'),
 
+    re_path(r'^mybooks/$', LoanedBooksByUserListView.as_view(), name='my-borrowed'),
+    re_path(r'^allborrowed/$', LoanedBooksByAllListView.as_view(), name='all-borrowed')
+
 ]
