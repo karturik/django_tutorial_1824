@@ -1,8 +1,9 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
   <h1>Title: {{ book.title }}</h1>
-
+  <img src="{% static book.cover.url %}" class = "image">
   <p><strong>Author:</strong> <a href="">{{ book.author }}</a></p> <!-- author detail link not yet defined -->
   <p><strong>Summary:</strong> {{ book.summary }}</p>
   <p><strong>ISBN:</strong> {{ book.isbn }}</p>

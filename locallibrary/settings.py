@@ -31,6 +31,7 @@ INSTALLED_APPS = [
 
     # our_apps
     'catalog.apps.CatalogConfig',
+    'users_and_accounts.apps.UsersAndAccountsConfig'
 
     # 3rd apps
 ]
@@ -121,6 +122,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/catalog/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'locallibrary', 'media/')
 
 # stmp email configuration
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

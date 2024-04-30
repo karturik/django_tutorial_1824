@@ -19,5 +19,5 @@ urlpatterns = [
     re_path(r'^author/(?P<pk>\d+)/update/$', AuthorUpdate.as_view(), name='author_update'),
     re_path(r'^author/(?P<pk>\d+)/delete/$', AuthorDelete.as_view(), name='author_delete'),
 
-
+    path("search/", searching, name="searching")
 ]

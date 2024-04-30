@@ -1,0 +1,60 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="col-md-8 offset-md-2" style="height:100%">
+      {% if searched %}
+          <h1>Поиск по сайту: {{ searched }}</h1>
+      {% if books_results %}
+          <h3>Книги найдены:</h3>
+          {% for result in books_results %}
+              <p><div class="container">
+              <div class="top">
+                  <div class="row justify-content-md-center">
+                      <div class="col-md-auto">
+                      <img class = "" src="{{ result.cover.url }}">
+                      </div>
+                      <div class="col-md">
+                          <div class="row">
+                              <a href="{% url 'book-detail' result.pk %}"><h2>{{ result.title }}</h2></a>
+                              <small>
+                                  {{ result.author }} |&nbsp;
+                              </small>
+                              <div class="row">
+                                  <small>Жанр: {{ result.genre.all }}
+                                  </small>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div></p>
+          <hr>
+          {% endfor %}
+      {% else %}
+      <p>No books found for such query!</p>
+      {% endif %}
+      {% if authors_results %}
+        <h3>Авторы найдены:</h3>
+          {% for result in authors_results %}
+              <div class="container">
+                  <div class="top">
+                      <div class="row justify-content-md-center">
+                          <div class="col-md">
+                              <div class="row">
+                                  <a href="{% url 'author-detail' result.pk %}"><h2>{{ result }}</h2></a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+          <hr>
+          {% endfor %}
+      {% else %}
+      <p>No authors found for such query!</p>
+      {% endif %}
+    {% else %}
+      <p>Try search for something!</p>
+    {% endif %}
+  </div>
+  </div>
+  </div>
+{% endblock %}

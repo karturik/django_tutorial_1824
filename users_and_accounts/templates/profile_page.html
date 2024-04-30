@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Профиль пользователя {{ profile.user.username }}</h1>
+    <p>Username: {{ profile.user.username }}</p>
+    <p>Email: {{ profile.user.email }}</p>
+    <p>Date of birth: {{ profile.date_of_birth }}</p>
+    <p>First Name: {{ profile.user.first_name }}</p>
+    <p>Last Name: {{ profile.user.last_name }}</p>
+    <p><img src="{{ profile.photo.url }}" style="max-width: 200px"></p>
+
+    <a href="{% url 'edit' %}"><button class="btn-warning">Редактировать</button></a>
+
+{% endblock %}

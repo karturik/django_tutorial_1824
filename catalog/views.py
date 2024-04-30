@@ -1,9 +1,14 @@
 from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, EmptyPage
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.db.models import Q
+
+from django.contrib import messages
+
 from django.urls import reverse_lazy
 
 from django.shortcuts import get_object_or_404
@@ -72,10 +77,11 @@ class BookListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 10
 
 
-class BookDetailView(PermissionRequiredMixin, generic.DetailView):
+class BookDetailView(SuccessMessageMixin, generic.DetailView):
     model = Book
 
     # permission_required = 'catalog.delete'
+    info_message = "Вы можете взять эту книгу в аренду."
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,7 +92,10 @@ class BookDetailView(PermissionRequiredMixin, generic.DetailView):
         book_id = self.kwargs['pk']
         book_views_times = request.session.get(f'book_{book_id}_viewed', 0)
         request.session[f'book_{book_id}_viewed'] = book_views_times + 1
+        messages.info(self.request, self.info_message)
         return super().get(request, *args, **kwargs)
+
+
 
 
 class AuthorDetailView(generic.DetailView):
@@ -183,10 +192,17 @@ def renew_book_librarian(request, pk):
     return render(request, 'catalog/book_renew_librarian.html', {'form': form, 'bookinst': book_inst})
 
 
-class AuthorCreate(CreateView):
+class AuthorCreate(SuccessMessageMixin, CreateView):
     model = Author
     fields = '__all__'
     initial={'date_of_death': '12/10/2016'}
+
+    success_message = "Автор успешно добавлен."
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, self.success_message)
+        return response
 
 
 class AuthorUpdate(UpdateView):
@@ -197,3 +213,16 @@ class AuthorUpdate(UpdateView):
 class AuthorDelete(DeleteView):
     model = Author
     success_url = reverse_lazy('authors')
+
+
+def searching(request):
+    if request.method == "POST":
+        # print(request.POST)
+        searched = request.POST.get('searched').title()
+        books_results = Book.objects.filter(title__icontains=searched)
+        authors_results = Author.objects.filter(Q(first_name__icontains=searched) | Q(last_name__icontains=searched))
+        return render(request, "catalog/search_page.html", {'searched': searched,
+                                                            'books_results': books_results,
+                                                            'authors_results': authors_results})
+    else:
+        return render(request, "catalog/search_page.html")

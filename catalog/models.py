@@ -34,6 +34,8 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
     # ManyToManyField used because genre can contain many books. Books can cover many genres.
     # Genre class has already been defined so we can specify the object above.
+    cover = models.ImageField(verbose_name='book_cover', name='Book cover', upload_to='catalog/book_covers/',
+                              default='catalog/book_covers/no_book_cover.png')
 
     def display_genre(self):
         """
